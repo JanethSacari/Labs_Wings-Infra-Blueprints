@@ -40,7 +40,7 @@ Automation scripts and Linux engineering patterns developed for the **RHCSA** ce
 
 ## 🏆 Certifications & Milestones
 - [x] **Cloud Computing Foundations**
-- [x] **Microsoft Certified: Azure Administrator Associate** (2026 January target)
+- [x] **Microsoft Certified: Azure Developer Associate** (2026 January target)
 - [ ] **Red Hat Certified System Administrator - RHCSA** (Next target)
 
 ---
