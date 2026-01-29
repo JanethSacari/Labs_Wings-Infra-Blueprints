@@ -1,55 +1,64 @@
 # 🪽 Labs_Wings-Infra-Blueprints 
 
-> **"The foundation must be solid for the wings to fly."**
+> **"I'm the one who gripped you tight and raised you from perdition."** — *Infrastructure Edition*
 
-This repository serves as my "Digital Bunker" for infrastructure. Here, I document my technical ascension as a Cloud Specialist, focusing on resilient architectures, automation, and governance across Multi-Cloud environments.
+This repository is my **Digital Bunker**. It documents my technical ascension from a Backend Developer to a Multi-Cloud & Infrastructure Specialist. Here, chaos is organized into scalable, secure, and resilient code.
 
 ---
 
-## 🟦 Mission (Philosophy)
-Just as sacred geometry organizes chaos, these blueprints aim to transform complex infrastructures into scalable, secure, and efficient environments. This project reflects my progress toward mastering **Azure**, **AWS**, and **Red Hat (RHCSA/OpenShift)** ecosystems.
+## 🟦 The Philosophy: Building the Vessel
+Just as a vessel needs to be strong to carry grace, modern applications need a rock-solid foundation. This project reflects my journey toward mastering **Hybrid Cloud (Azure & OCI)** and the **Red Hat Ecosystem**.
 
 ---
 
 ## 📂 Repository Structure
 
-### ☸️ Kubernetes & OpenShift (`/kubernetes`, `/openshift`)
-Focused on container orchestration and workload lifecycle. Includes:
-- **Core:** Pods, Deployments, and Services.
-- **Resilience:** Liveness and Readiness probes to ensure the "vessel" is healthy and ready for deployment.
-- **Storage:** Data persistence strategies using PVCs and StorageClasses.
+### 🐧 Red Hat Enterprise Linux (`/linux-rhcsa`)
+**The Core.** Engineering patterns and automation for the **RHCSA** path.
+- **Storage:** LVM, VDO, and Stratis configurations.
+- **Security:** Firewalld, SELinux policies, and permissions.
+- **Automation:** Critical system task scripts.
 
-### ☁️ Cloud Providers (`/azure`, `/aws`)
-Infrastructure as Code (IaC) for major cloud platforms:
-- **Azure:** Bicep and ARM Templates for resource governance and cloud architecture.
-- **AWS:** CloudFormation templates and Lambda functions (Python/Node.js).
+### ☸️ Containers & Orchestration (`/kubernetes`, `/openshift`)
+Focused on the **EX288** certification and enterprise-grade workloads.
+- **OpenShift:** S2I, BuildConfigs, Routes, and Operator patterns.
+- **Resilience:** Probes, Resource Quotas, and NetworkPolicies.
+- **Persistence:** Dynamic provisioning and StorageClasses.
 
-### 🐧 Red Hat & Automation (`/scripts`)
-Automation scripts and Linux engineering patterns developed for the **RHCSA** certification path.
-- Critical task automation.
-- System troubleshooting and performance tuning.
+### ☁️ Multi-Cloud Infrastructure (`/azure`, `/oracle-oci`, `/aws`)
+Infrastructure as Code (IaC) for diverse skies.
+- **Oracle Cloud (OCI):** **[Focus Feb 2026]** Architecting secure VCNs and Autonomous Databases.
+- **Azure:** Bicep and ARM Templates for high-scale banking environments.
+- **AWS:** Lambda functions and CloudFormation logic.
+
+### 🛠️ Automation & Troubleshooting (`/scripts`)
+- **Bash & Python:** Tools for log analysis and performance tuning.
+- **Debug:** Deep-dive troubleshooting patterns for Hybrid Cloud.
+
+---
+
+## 🟢 2026 Flight Plan (Timeline)
+
+| Phase | Focus | Status | Target |
+| :--- | :--- | :---: | :--- |
+| **Blue Phase** | Azure Developer Associate | ✅ | Jan 2026 |
+| **Green Phase** | **Oracle Multi-Cloud Marathon (5x)** | ⏳ | Feb 2026 |
+| **Red Phase** | **RHCSA (EX200)** | 📅 | Mar 12, 2026 |
+| **Red Phase II**| **OpenShift App Dev (EX288)** | 📅 | Mar 31, 2026 |
 
 ---
 
 ## 🛠️ Tech Stack
-- **Languages:** Bash, Python, YAML, Bicep.
-- **Platforms:** Red Hat Enterprise Linux, OpenShift, Microsoft Azure, AWS.
-- **Concepts:** CI/CD, IaC, GitOps, Containerization.
-
----
-
-## 🏆 Certifications & Milestones
-- [x] **Cloud Computing Foundations**
-- [x] **Microsoft Certified: Azure Developer Associate** (2026 January target)
-- [ ] **Red Hat Certified System Administrator - RHCSA** (Next target)
+- **Languages:** Java, Spring Boot, Bash, Python, YAML, Bicep.
+- **Clouds:** Azure, Oracle Cloud (OCI), OpenShift (Hybrid).
+- **Core:** RHEL, Kubernetes, GitOps, CI/CD.
 
 ---
 
 ## ✉️ Contact
-Connect with me to exchange insights about Cloud Engineering and the future of technology. 
-*"The road ahead is long, but I am not walking it alone."*
+*"The road ahead is long, but I am not walking it alone."* Connect with me to talk about Cloud Engineering, Linux, or the best way to travel with three cats to California.
 
 ---
 <p align="center">
-  <sub>Developed with 💙 by Iris | Future Angel Project</sub>
+  <sub>Developed with 💙 by **Iris** | 🪽 Future Angel Project</sub>
 </p>
