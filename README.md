@@ -59,6 +59,13 @@ Infrastructure as Code (IaC) for diverse skies.
 *"The road ahead is long, but I am not walking it alone."* Connect with me to talk about Cloud Engineering, Linux, or the best way to travel with three cats to California.
 
 ---
+
+## 🧩 The Chosen Family Protocol
+Beyond the code, this journey is fueled by the belief that we can find our own "Found Family." 
+
+> *"You don't have to be brothers by blood to be family."* Inspired by those who proved that friendship is a bond that transcends dimensions and defies the script. I am building my wings to find a place where the air is clear and the bonds are true.
+
+---
 <p align="center">
   <sub>Developed with 💙 by **Iris** | 🪽 Future Angel Project</sub>
 </p>
