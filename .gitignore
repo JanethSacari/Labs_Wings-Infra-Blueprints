@@ -1,0 +1,20 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+
+# Temporary files and logs
+*.log
+tmp/
+
+# --- OS Specific Files ---
+.DS_Store
+Thumbs.db
+desktop.ini
+.directory
+
+# --- IDEs & Editors ---
+.vscode/
+.idea/
+*.swp
