@@ -37,17 +37,6 @@ Infrastructure as Code (IaC) for diverse skies.
 
 ---
 
-## 🟢 2026 Flight Plan (Timeline)
-
-| Phase | Focus | Status | Target |
-| :--- | :--- | :---: | :--- |
-| **Blue Phase** | Azure Developer Associate | ✅ | Jan 2026 |
-| **Green Phase** | **Oracle Multi-Cloud Marathon (5x)** | ⏳ | Feb 2026 |
-| **Red Phase** | **RHCSA (EX200)** | 📅 | Mar 12, 2026 |
-| **Red Phase II**| **OpenShift App Dev (EX288)** | 📅 | Mar 31, 2026 |
-
----
-
 ## 🛠️ Tech Stack
 - **Languages:** Java, Spring Boot, Bash, Python, YAML, Bicep.
 - **Clouds:** Azure, Oracle Cloud (OCI), OpenShift (Hybrid).
