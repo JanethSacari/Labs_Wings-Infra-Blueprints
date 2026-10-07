@@ -1,0 +1,84 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: node-broken-push-binding
+spec:
+  params:
+    - name: repo-url
+      value: $(body.repository.clone_url)
+    - name: revision
+      value: $(body.after)
+    - name: image-tag
+      value: $(body.after)
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: node-broken-pipeline-template
+spec:
+  params:
+    - name: repo-url
+    - name: revision
+    - name: image-tag
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1
+      kind: PipelineRun
+      metadata:
+        generateName: node-broken-push-
+      spec:
+        pipelineRef:
+          name: node-broken-ci
+        taskRunTemplate:
+          serviceAccountName: node-broken-pipeline
+        params:
+          - name: repo-url
+            value: $(tt.params.repo-url)
+          - name: revision
+            value: $(tt.params.revision)
+          - name: image-tag
+            value: $(tt.params.image-tag)
+          - name: app-path
+            value: openshift/node-broken
+        workspaces:
+          - name: shared-data
+            volumeClaimTemplate:
+              metadata:
+                labels:
+                  app: node-broken
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                resources:
+                  requests:
+                    storage: 1Gi
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: EventListener
+metadata:
+  name: node-broken-listener
+spec:
+  serviceAccountName: node-broken-event-listener
+  triggers:
+    - name: github-push
+      interceptors:
+        - ref:
+            name: github
+            kind: ClusterInterceptor
+          params:
+            - name: secretRef
+              value:
+                secretName: github-webhook-secret
+                secretKey: secretToken
+            - name: eventTypes
+              value:
+                - push
+        - ref:
+            name: cel
+            kind: ClusterInterceptor
+          params:
+            - name: filter
+              value: "!body.deleted"
+      bindings:
+        - ref: node-broken-push-binding
+      template:
+        ref: node-broken-pipeline-template

@@ -1,0 +1,35 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: node-broken-git-clone
+spec:
+  description: Clone a repository revision into a run-specific directory.
+  params:
+    - name: url
+      type: string
+    - name: revision
+      type: string
+  workspaces:
+    - name: source
+  results:
+    - name: source-path
+      description: Absolute path to the checked-out source directory.
+  steps:
+    - name: clone
+      image: alpine/git:v2.47.2
+      env:
+        - name: REPOSITORY_URL
+          value: $(params.url)
+        - name: REVISION
+          value: $(params.revision)
+        - name: RUN_UID
+          value: $(context.pipelineRun.uid)
+      script: |
+        set -eu
+        SOURCE_PATH="$(workspaces.source.path)/$RUN_UID"
+        mkdir -p "$SOURCE_PATH"
+        git -C "$SOURCE_PATH" init
+        git -C "$SOURCE_PATH" remote add origin "$REPOSITORY_URL"
+        git -C "$SOURCE_PATH" fetch --depth=1 origin "$REVISION"
+        git -C "$SOURCE_PATH" checkout --detach FETCH_HEAD
+        printf '%s' "$SOURCE_PATH" > "$(results.source-path.path)"

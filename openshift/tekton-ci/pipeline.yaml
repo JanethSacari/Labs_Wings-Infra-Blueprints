@@ -1,0 +1,56 @@
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: node-broken-ci
+spec:
+  description: Clone, build, push, and deploy the node-broken application.
+  params:
+    - name: repo-url
+      type: string
+      default: https://github.com/JanethSacari/Labs_Wings-Infra-Blueprints.git
+    - name: revision
+      type: string
+      default: main
+    - name: image-tag
+      type: string
+      default: manual
+    - name: app-path
+      type: string
+      default: openshift/node-broken
+  workspaces:
+    - name: shared-data
+  tasks:
+    - name: clone-source
+      taskRef:
+        name: node-broken-git-clone
+      params:
+        - name: url
+          value: $(params.repo-url)
+        - name: revision
+          value: $(params.revision)
+      workspaces:
+        - name: source
+          workspace: shared-data
+    - name: build-and-push
+      runAfter:
+        - clone-source
+      taskRef:
+        name: node-broken-build-and-push
+      params:
+        - name: source-path
+          value: $(tasks.clone-source.results.source-path)
+        - name: app-path
+          value: $(params.app-path)
+        - name: image-tag
+          value: $(params.image-tag)
+      workspaces:
+        - name: source
+          workspace: shared-data
+    - name: deploy
+      runAfter:
+        - build-and-push
+      taskRef:
+        name: node-broken-deploy
+      params:
+        - name: image
+          value: $(tasks.build-and-push.results.image-url)
