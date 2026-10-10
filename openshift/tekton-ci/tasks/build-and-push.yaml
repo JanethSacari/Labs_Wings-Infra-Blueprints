@@ -3,7 +3,7 @@ kind: Task
 metadata:
   name: node-broken-build-and-push
 spec:
-  description: Build the Node.js container image and push it to the OpenShift registry.
+  description: Build the Node.js image with an OpenShift BuildConfig and push it to the internal registry.
   params:
     - name: source-path
       type: string
@@ -17,16 +17,8 @@ spec:
     - name: image-url
       description: Full image reference pushed to the internal registry.
   steps:
-    - name: prepare-image-stream
-      image: registry.access.redhat.com/openshift4/ose-cli:v4.18
-      script: |
-        set -eu
-        oc create imagestream node-broken --dry-run=client -o yaml | oc apply -f -
     - name: build-and-push
-      image: registry.access.redhat.com/ubi9/buildah:latest
-      securityContext:
-        privileged: true
-        runAsUser: 0
+      image: registry.access.redhat.com/openshift4/ose-cli:v4.18
       env:
         - name: SOURCE_PATH
           value: $(params.source-path)
@@ -34,6 +26,8 @@ spec:
           value: $(params.app-path)
         - name: IMAGE_TAG
           value: $(params.image-tag)
+        - name: RUN_ID
+          value: $(context.pipelineRun.uid)
       script: |
         set -eu
 
@@ -48,33 +42,42 @@ spec:
           exit 1
         fi
 
+        case "$APP_PATH" in
+          ""|/*|../*|*/../*|*/..)
+            echo "Invalid application path: $APP_PATH" >&2
+            exit 1
+            ;;
+        esac
+
+        SOURCE_DIR="${SOURCE_PATH}/${APP_PATH}"
+        test -f "$SOURCE_DIR/Dockerfile"
+
         NAMESPACE="$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)"
         REGISTRY="image-registry.openshift-image-registry.svc:5000"
         IMAGE="${REGISTRY}/${NAMESPACE}/node-broken:${IMAGE_TAG}"
-        SOURCE_DIR="${SOURCE_PATH}/${APP_PATH}"
+        BUILD_CONFIG="node-broken-${RUN_ID}"
 
-        test -f "$SOURCE_DIR/Dockerfile"
-        TOKEN="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"
-        AUTH_FILE=/tmp/registry-auth.json
+        oc create imagestream node-broken --dry-run=client -o yaml | oc apply -f -
+        cat <<EOF | oc apply -f -
+        apiVersion: build.openshift.io/v1
+        kind: BuildConfig
+        metadata:
+          name: ${BUILD_CONFIG}
+          labels:
+            app: node-broken
+        spec:
+          runPolicy: Serial
+          source:
+            type: Binary
+            binary: {}
+          strategy:
+            type: Docker
+            dockerStrategy: {}
+          output:
+            to:
+              kind: ImageStreamTag
+              name: node-broken:${IMAGE_TAG}
+        EOF
 
-        printf '%s' "$TOKEN" | buildah login \
-          --tls-verify=false \
-          --authfile "$AUTH_FILE" \
-          --username "system:serviceaccount:${NAMESPACE}:node-broken-pipeline" \
-          --password-stdin \
-          "$REGISTRY"
-        buildah bud \
-          --storage-driver=vfs \
-          --isolation=chroot \
-          --format=docker \
-          --file "$SOURCE_DIR/Dockerfile" \
-          --tag "$IMAGE" \
-          "$SOURCE_DIR"
-        buildah push \
-          --storage-driver=vfs \
-          --authfile "$AUTH_FILE" \
-          --tls-verify=false \
-          "$IMAGE" \
-          "docker://$IMAGE"
-
+        oc start-build "$BUILD_CONFIG" --from-dir "$SOURCE_DIR" --follow --wait
         printf '%s' "$IMAGE" > "$(results.image-url.path)"
