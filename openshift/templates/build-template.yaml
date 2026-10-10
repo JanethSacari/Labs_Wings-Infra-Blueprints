@@ -1,0 +1,39 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: nodejs-app-build
+  annotations:
+    description: Build the Node.js application from a Git repository.
+    tags: openshift,buildconfig,nodejs
+parameters:
+  - name: repoUrl
+    description: Git clone URL for the application source.
+    required: true
+objects:
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      name: nodejs-app
+      labels:
+        app: nodejs-app
+  - apiVersion: build.openshift.io/v1
+    kind: BuildConfig
+    metadata:
+      name: nodejs-app
+      labels:
+        app: nodejs-app
+    spec:
+      runPolicy: Serial
+      source:
+        type: Git
+        git:
+          uri: ${repoUrl}
+        contextDir: openshift/node-broken
+      strategy:
+        type: Docker
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+      output:
+        to:
+          kind: ImageStreamTag
+          name: nodejs-app:latest

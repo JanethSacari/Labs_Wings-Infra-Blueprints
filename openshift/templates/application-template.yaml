@@ -1,0 +1,79 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: nodejs-app-application
+  annotations:
+    description: Deploy the Node.js application and expose it with a Route.
+    tags: openshift,nodejs,deployment,route
+parameters:
+  - name: host
+    description: Fully qualified host name for the application Route.
+    required: true
+objects:
+  - apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: nodejs-app
+      labels:
+        app: nodejs-app
+      annotations:
+        image.openshift.io/triggers: >-
+          [{"from":{"kind":"ImageStreamTag","name":"nodejs-app:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"app\")].image"}]
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: nodejs-app
+      template:
+        metadata:
+          labels:
+            app: nodejs-app
+        spec:
+          containers:
+            - name: app
+              image: nodejs-app:latest
+              imagePullPolicy: Always
+              ports:
+                - name: http
+                  containerPort: 8080
+              env:
+                - name: PORT
+                  value: "8080"
+              readinessProbe:
+                httpGet:
+                  path: /healthz
+                  port: http
+                initialDelaySeconds: 5
+                periodSeconds: 10
+              livenessProbe:
+                httpGet:
+                  path: /healthz
+                  port: http
+                initialDelaySeconds: 15
+                periodSeconds: 20
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: nodejs-app
+      labels:
+        app: nodejs-app
+    spec:
+      selector:
+        app: nodejs-app
+      ports:
+        - name: http
+          port: 8080
+          targetPort: http
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    metadata:
+      name: nodejs-app
+      labels:
+        app: nodejs-app
+    spec:
+      host: ${host}
+      to:
+        kind: Service
+        name: nodejs-app
+      port:
+        targetPort: http
