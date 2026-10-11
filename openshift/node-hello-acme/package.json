@@ -1,0 +1,9 @@
+{
+  "name": "node-hello-acme",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A minimal Hello Acme Node.js application for OpenShift",
+  "scripts": {
+    "start": "node index.js"
+  }
+}
