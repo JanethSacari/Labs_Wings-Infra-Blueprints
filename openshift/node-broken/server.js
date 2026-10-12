@@ -19,6 +19,6 @@ const server = http.createServer((request, response) => {
 });
 
 // Intentional failure: the process listens only on the container loopback.
-server.listen(port, "127.0.0.1", () => {
-  console.log(`Server listening at http://127.0.0.1:${port}`);
+server.listen(port, "0.0.0.0", () => {
+  console.log(`Server listening at http://0.0.0.0:${port}`);
 });
