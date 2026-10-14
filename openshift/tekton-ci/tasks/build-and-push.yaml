@@ -18,7 +18,7 @@ spec:
       description: Full image reference pushed to the internal registry.
   steps:
     - name: build-and-push
-      image: registry.access.redhat.com/openshift4/ose-cli:v4.18
+      image: quay.io/openshift/origin-cli:4.18
       env:
         - name: SOURCE_PATH
           value: $(params.source-path)
@@ -26,8 +26,6 @@ spec:
           value: $(params.app-path)
         - name: IMAGE_TAG
           value: $(params.image-tag)
-        - name: RUN_ID
-          value: $(context.pipelineRun.uid)
       script: |
         set -eu
 
@@ -55,7 +53,7 @@ spec:
         NAMESPACE="$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)"
         REGISTRY="image-registry.openshift-image-registry.svc:5000"
         IMAGE="${REGISTRY}/${NAMESPACE}/node-broken:${IMAGE_TAG}"
-        BUILD_CONFIG="node-broken-${RUN_ID}"
+        BUILD_CONFIG="node-broken"
 
         oc create imagestream node-broken --dry-run=client -o yaml | oc apply -f -
         cat <<EOF | oc apply -f -

@@ -95,6 +95,14 @@ metadata:
   name: node-broken-pipeline-run-creator
 rules:
   - apiGroups:
+      - triggers.tekton.dev
+    resources:
+      - triggers
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
       - tekton.dev
     resources:
       - pipelineruns
