@@ -98,6 +98,8 @@ rules:
       - triggers.tekton.dev
     resources:
       - triggers
+      - triggerbindings
+      - triggertemplates
     verbs:
       - get
       - list
