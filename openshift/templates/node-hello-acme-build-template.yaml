@@ -1,0 +1,39 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: node-hello-acme-build
+  annotations:
+    description: Build the Hello Acme Node.js application from a Git repository.
+    tags: openshift,buildconfig,nodejs,hello-acme
+parameters:
+  - name: repoUrl
+    description: Git clone URL for the application source.
+    required: true
+objects:
+  - apiVersion: image.openshift.io/v1
+    kind: ImageStream
+    metadata:
+      name: node-hello-acme
+      labels:
+        app: node-hello-acme
+  - apiVersion: build.openshift.io/v1
+    kind: BuildConfig
+    metadata:
+      name: node-hello-acme
+      labels:
+        app: node-hello-acme
+    spec:
+      runPolicy: Serial
+      source:
+        type: Git
+        git:
+          uri: ${repoUrl}
+        contextDir: openshift/node-hello-acme
+      strategy:
+        type: Docker
+        dockerStrategy:
+          dockerfilePath: Dockerfile
+      output:
+        to:
+          kind: ImageStreamTag
+          name: node-hello-acme:latest
