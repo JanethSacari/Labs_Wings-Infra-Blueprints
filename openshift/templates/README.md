@@ -12,10 +12,40 @@ template.
 - `application-template.yaml` creates a Deployment, Service, and Route. Set
   `host` to a hostname that belongs to the cluster's ingress domain and is
   available for this application.
+- `node-hello-acme-build-template.yaml` and
+  `node-hello-acme-application-template.yaml` provide the same build and
+  deployment workflow for the working Hello Acme app in
+  `openshift/node-hello-acme`. They create resources named `node-hello-acme`
+  and do not depend on the intentionally broken app.
 
 The Deployment follows updates to the `nodejs-app:latest` ImageStreamTag.
 The sample app in `node-broken` intentionally has an invalid `package.json`,
 so the container will fail to start until that exercise defect is corrected.
+
+## Deploy Hello Acme
+
+Process and apply the build template, then start its BuildConfig:
+
+```sh
+oc process -f node-hello-acme-build-template.yaml \
+  -p repoUrl=https://github.com/JanethSacari/Labs_Wings-Infra-Blueprints.git \
+  | oc apply -f -
+
+oc start-build node-hello-acme --follow
+```
+
+After the image is built, process and apply the application template with a
+hostname available under your cluster's ingress domain:
+
+```sh
+oc process -f node-hello-acme-application-template.yaml \
+  -p host=node-hello-acme.apps.example.com \
+  | oc apply -f -
+```
+
+The Deployment follows updates to the `node-hello-acme:latest` ImageStreamTag.
+The application serves the `Hello Acme!` page at `/` and returns `ok` at
+`/healthz`.
 
 ## Process and apply
 
