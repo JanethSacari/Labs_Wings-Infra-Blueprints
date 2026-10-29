@@ -37,3 +37,24 @@ npm start
 ```
 
 Open `http://localhost:8080` to see the greeting.
+
+## Deploy with OpenShift Templates
+
+From `openshift/templates`, process and apply the Hello Acme build template:
+
+```sh
+oc process -f node-hello-acme-build-template.yaml \
+  -p repoUrl=https://github.com/JanethSacari/Labs_Wings-Infra-Blueprints.git \
+  | oc apply -f -
+
+oc start-build node-hello-acme --follow
+```
+
+After the build completes, create the Deployment, Service, and Route. Replace
+the example host with a hostname under your cluster's ingress domain:
+
+```sh
+oc process -f node-hello-acme-application-template.yaml \
+  -p host=node-hello-acme.apps.example.com \
+  | oc apply -f -
+```
